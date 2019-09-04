@@ -1,8 +1,11 @@
 package com.hackerrank.github.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -15,9 +18,9 @@ public class Event implements Serializable {
     @Id
     private Long id;
     private String type;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Actor actor;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Repo repo;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Timestamp created_at;
@@ -71,5 +74,10 @@ public class Event implements Serializable {
 
     public void setCreated_at(Timestamp createdAt) {
         this.created_at = createdAt;
+    }
+    
+    @JsonIgnore
+    public String getEventDay() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(this.created_at);
     }
 }

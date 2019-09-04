@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.Stream;
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
@@ -353,7 +354,7 @@ public class HttpJsonDynamicUnitTest {
     private boolean validateStatusCode(String filename, String testcase, String expected, String found) {
         if (!expected.equals(found)) {
             String reason = "Status code";
-            addTestFailure(filename, new Pair(new Pair(testcase, reason), new Pair(expected, found)));
+            addTestFailure(filename, new MutablePair<>(new MutablePair<>(testcase, reason), new MutablePair<>(expected, found)));
 
             return false;
         }
@@ -364,7 +365,7 @@ public class HttpJsonDynamicUnitTest {
     private boolean validateContentType(String filename, String testcase, String expected, String found) {
         if (!found.startsWith(expected)) {
             String reason = "Content type";
-            addTestFailure(filename, new Pair(new Pair(testcase, reason), new Pair(expected, found)));
+            addTestFailure(filename, new MutablePair<>(new MutablePair<>(testcase, reason), new MutablePair<>(expected, found)));
 
             return false;
         }
@@ -375,7 +376,7 @@ public class HttpJsonDynamicUnitTest {
     private boolean validateTextResponse(String filename, String testcase, String expected, String found) {
         if (!expected.equals(found)) {
             String reason = "Response text does not match with the expected response";
-            addTestFailure(filename, new Pair(new Pair(testcase, reason), new Pair(expected, found)));
+            addTestFailure(filename, new MutablePair<>(new MutablePair<>(testcase, reason), new MutablePair<>(expected, found)));
 
             return false;
         }
@@ -393,8 +394,8 @@ public class HttpJsonDynamicUnitTest {
 
             if (expectedResponseJsonList.size() != responseBodyJsonList.size()) {
                 String reason = "Response Json array size does not match with the expected array size";
-                addTestFailure(filename, new Pair(new Pair(testcase, reason),
-                        new Pair(String.valueOf(expectedResponseJsonList.size()),
+                addTestFailure(filename, new MutablePair<>(new MutablePair<>(testcase, reason),
+                        new MutablePair<>(String.valueOf(expectedResponseJsonList.size()),
                                 String.valueOf(responseBodyJsonList.size()))));
 
                 return false;
@@ -405,7 +406,7 @@ public class HttpJsonDynamicUnitTest {
 
                     if (!expectedJson.equals(foundJson)) {
                         String reason = String.format("Response Json (at index %d) does not match with the expected Json", i);
-                        addTestFailure(filename, new Pair(new Pair(testcase, reason), new Pair(expectedJson.toString(),
+                        addTestFailure(filename, new MutablePair<>(new MutablePair<>(testcase, reason), new MutablePair<>(expectedJson.toString(),
                                 foundJson.toString())));
 
                         return false;
@@ -415,7 +416,7 @@ public class HttpJsonDynamicUnitTest {
         } catch (IOException ex) {
             if (!expected.equals(found)) {
                 String reason = "Response Json does not match with the expected Json";
-                addTestFailure(filename, new Pair(new Pair(testcase, reason), new Pair(expected.toString(),
+                addTestFailure(filename, new MutablePair<>(new MutablePair<>(testcase, reason), new MutablePair<>(expected.toString(),
                         found.toString())));
 
                 return false;

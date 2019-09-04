@@ -2,15 +2,14 @@ package com.hackerrank.github.controller;
 
 import com.hackerrank.github.model.Actor;
 import com.hackerrank.github.model.Event;
-import com.hackerrank.github.model.MaximumEventsComparator;
 import com.hackerrank.github.repository.ActorRepository;
 import com.hackerrank.github.repository.EventRepository;
 import com.hackerrank.github.repository.RepoRepository;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,12 +78,14 @@ public class GithubApiRestController {
 
     @GetMapping("/actors")
     public ResponseEntity returnActorsNumberOfEvents() {
-        return new ResponseEntity(actorRepository.findAll().stream().sorted(new MaximumEventsComparator()).collect(Collectors.toList()), HttpStatus.OK);
+        Comparator<Actor> comparator = Comparator.comparing(Actor::getTotalEvents).thenComparing(Actor::getLastEvent).reversed().thenComparing(Actor::getLogin);
+        return new ResponseEntity(actorRepository.findAll().stream().sorted(comparator).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping("/actors/streak")
     public ResponseEntity returnActorsMaximumStreak() {
-        return new ResponseEntity(actorRepository.findAll().stream().sorted(new MaximumEventsComparator()).collect(Collectors.toList()), HttpStatus.OK);
+        Comparator<Actor> comparator = Comparator.comparing(Actor::getMaximumStreak).thenComparing(Actor::getLastEvent).reversed().thenComparing(Actor::getLogin);
+        return new ResponseEntity(actorRepository.findAll().stream().sorted(comparator).collect(Collectors.toList()), HttpStatus.OK);
     }
 
 }
